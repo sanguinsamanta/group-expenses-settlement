@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Expense Settlement</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-badge">
+                    <span class="logo-icon">⚖️</span>
+                    <h1>Group Expense Settlement</h1>
+                </div>
+                <p class="subtitle">Split shared expenses and simplify settlements easily</p>
+            </div>
+        </header>
+
+        <!-- Global Alert Message Banner -->
+        <div id="alert-banner" class="alert-banner hidden" role="alert">
+            <span id="alert-message"></span>
+            <button id="alert-close-btn" class="close-btn" aria-label="Close message">&times;</button>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <section class="summary-cards" aria-label="Summary Highlights">
+            <div class="metric-card">
+                <div class="metric-icon">💰</div>
+                <div class="metric-data">
+                    <span class="metric-label">Total Expenses</span>
+                    <span class="metric-value" id="stat-total-expenses">₹0.00</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">👥</div>
+                <div class="metric-data">
+                    <span class="metric-label">Group Members</span>
+                    <span class="metric-value" id="stat-member-count">0</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">🎯</div>
+                <div class="metric-data">
+                    <span class="metric-label">Equal Share / Person</span>
+                    <span class="metric-value" id="stat-equal-share">₹0.00</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Forms Grid -->
+        <div class="grid-two-col">
+            <!-- Add Member Form Card -->
+            <section class="card form-card">
+                <div class="card-header">
+                    <h2><span class="card-icon">👤</span> Add Member</h2>
+                    <span class="badge" id="member-limit-badge">Max 10</span>
+                </div>
+                <form id="member-form" novalidate>
+                    <div class="form-group">
+                        <label for="member-name-input">Member Name</label>
+                        <input type="text" id="member-name-input" name="name" placeholder="e.g. Aman, Rick, Maya" maxlength="50" required>
+                    </div>
+                    <button type="submit" id="add-member-btn" class="btn btn-primary">
+                        <span>+ Add Member</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Add Expense Form Card -->
+            <section class="card form-card">
+                <div class="card-header">
+                    <h2><span class="card-icon">🧾</span> Add Expense</h2>
+                    <span class="badge" id="expense-limit-badge">Max 50</span>
+                </div>
+                <form id="expense-form" novalidate>
+                    <div class="form-group">
+                        <label for="expense-desc-input">Description</label>
+                        <input type="text" id="expense-desc-input" name="description" placeholder="e.g. Dinner, Cab ride, Groceries" maxlength="100" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="expense-amount-input">Amount (₹)</label>
+                            <input type="number" id="expense-amount-input" name="amount" placeholder="Whole ₹ (e.g. 900)" min="1" step="1" required>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="expense-payer-select">Paid By</label>
+                            <select id="expense-payer-select" name="payerId" required>
+                                <option value="" disabled selected>Select member</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" id="add-expense-btn" class="btn btn-primary">
+                        <span>+ Add Expense</span>
+                    </button>
+                </form>
+            </section>
+        </div>
+
+        <!-- Members & Expenses Data Grid -->
+        <div class="grid-two-col">
+            <!-- Members Table Card -->
+            <section class="card table-card">
+                <div class="card-header">
+                    <h2><span class="card-icon">📋</span> Members List</h2>
+                    <span class="count-tag" id="members-count-tag">0 members</span>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="members-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">ID</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-tbody">
+                            <tr class="empty-row">
+                                <td colspan="2">No members added yet. Add one above!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Expenses Table Card -->
+            <section class="card table-card">
+                <div class="card-header">
+                    <h2><span class="card-icon">💳</span> Recorded Expenses</h2>
+                    <span class="count-tag" id="expenses-count-tag">0 expenses</span>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="expenses-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th style="width: 25%;">Amount</th>
+                                <th style="width: 30%;">Paid By</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses-tbody">
+                            <tr class="empty-row">
+                                <td colspan="3">No expenses logged yet. Record one above!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Balances Breakdown Section -->
+        <section class="card table-card">
+            <div class="card-header">
+                <h2><span class="card-icon">📊</span> Member Balances & Breakdown</h2>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="balances-table">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Total Paid</th>
+                            <th>Equal Share</th>
+                            <th>Net Balance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="balances-tbody">
+                        <tr class="empty-row">
+                            <td colspan="5">Add members and expenses to view balances.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Settlement Suggestions Section -->
+        <section class="card settlements-card">
+            <div class="card-header">
+                <h2><span class="card-icon">🤝</span> Recommended Settlements</h2>
+                <span class="badge badge-success">Zero-Sum Match</span>
+            </div>
+            <div id="settlements-list-container">
+                <div class="friendly-empty-state" id="settlements-empty-state">
+                    <span class="empty-icon">🎉</span>
+                    <p class="empty-title">All Settled Up!</p>
+                    <p class="empty-desc">No debts or transfers required at this time.</p>
+                </div>
+                <ul class="settlement-list hidden" id="settlement-list"></ul>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>SortmyExpense &bull; Group Expense Settlement Management System</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Maven build output
+target/
+
+# Local SQLite database
+expenses.db
+
+# Temporary classpath dumps
+classpath.txt
+
+# IDE configuration files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Operating system files
+Thumbs.db
+.DS_Store
